@@ -259,9 +259,9 @@ def write_pdf(content, backend_name, backend_module, page_size="A4", margin="1in
 
     raise RuntimeError(f"Unsupported backend: {backend_name}")
 
-def convert_markdown_to_pdf(markdown_text):
+def convert_markdown_to_pdf(markdown_text, page_size='A4', margin='1in'):
     backend_name, backend_module = load_backend("auto")
-    return write_pdf(markdown_text, backend_name, backend_module)
+    return write_pdf(markdown_text, backend_name, backend_module, page_size=page_size, margin=margin)
 
 def app(request):
     if request['method'] != 'POST':
@@ -273,6 +273,8 @@ def app(request):
     try:
         body = json.loads(request['body'])
         markdown_text = body.get('markdown', '')
+        page_size = body.get('page_size', 'A4')
+        margin = body.get('margin', '1in')
 
         if not markdown_text.strip():
             return {
@@ -280,7 +282,7 @@ def app(request):
                 'body': json.dumps({'error': 'No markdown content provided'}),
             }
 
-        pdf_bytes = convert_markdown_to_pdf(markdown_text)
+        pdf_bytes = convert_markdown_to_pdf(markdown_text, page_size=page_size, margin=margin)
 
         return {
             'statusCode': 200,

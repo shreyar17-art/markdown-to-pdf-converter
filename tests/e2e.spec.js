@@ -1,38 +1,65 @@
 import { test, expect } from '@playwright/test';
 
-test('convert markdown to pdf', async ({ page }) => {
-  // Navigate to the app
-  await page.goto('https://markdown-to-pdf-converter-taupe.vercel.app');
+test.describe('Inkdown', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/');
+  });
 
-  // Check the title
-  await expect(page).toHaveTitle('Markdown to PDF Converter');
+  test('has correct title', async ({ page }) => {
+    await expect(page).toHaveTitle(/Inkdown/);
+  });
 
-  // Enter some markdown
-  const markdown = `# Hello World
+  test('renders editor and preview panes', async ({ page }) => {
+    await expect(page.locator('text=Markdown').first()).toBeVisible();
+    await expect(page.locator('text=Preview').first()).toBeVisible();
+    await expect(page.locator('textarea')).toBeVisible();
+  });
 
-This is a **bold** text and *italic* text.
+  test('live preview updates as user types', async ({ page }) => {
+    const textarea = page.locator('textarea');
+    await textarea.clear();
+    await textarea.fill('# Hello World\n\nThis is **bold** text.');
 
-- Item 1
-- Item 2
+    const preview = page.locator('.prose');
+    await expect(preview.locator('h1')).toContainText('Hello World');
+    await expect(preview.locator('strong')).toContainText('bold');
+  });
 
-> This is a blockquote
+  test('template dropdown loads templates', async ({ page }) => {
+    await page.click('button:has-text("Templates")');
+    await expect(page.locator('text=Resume')).toBeVisible();
+    await expect(page.locator('text=Project README')).toBeVisible();
 
-\`inline code\`
+    await page.click('text=Resume');
+    const textarea = page.locator('textarea');
+    await expect(textarea).toContainText('Jane Smith');
+  });
 
-[Link](https://example.com)`;
+  test('new document clears editor', async ({ page }) => {
+    await page.click('button:has-text("New")');
+    const textarea = page.locator('textarea');
+    await expect(textarea).toHaveValue('');
+  });
 
-  await page.fill('textarea', markdown);
+  test('export dialog opens and has settings', async ({ page }) => {
+    await page.click('button:has-text("Export PDF")');
+    await expect(page.locator('text=Export PDF').nth(1)).toBeVisible();
+    await expect(page.locator('#filename')).toBeVisible();
+    await expect(page.locator('#page-size')).toBeVisible();
+    await expect(page.locator('#margin')).toBeVisible();
+  });
 
-  // Click the convert button
-  await page.click('button:has-text("Convert to PDF")');
+  test('export dialog validates empty content', async ({ page }) => {
+    const textarea = page.locator('textarea');
+    await textarea.clear();
 
-  // Wait a bit for the request
-  await page.waitForTimeout(5000);
+    await page.click('button:has-text("Export PDF")');
+    const downloadBtn = page.locator('button:has-text("Download PDF")');
+    await expect(downloadBtn).toBeDisabled();
+  });
 
-  // Check if error message appears
-  const errorVisible = await page.isVisible('p:has-text("Failed to convert")');
-  expect(errorVisible).toBe(false);
-
-  // Since download event might not fire in headless, just check that no error occurred
-  // In a real scenario, you might need to handle downloads differently
+  test('keyboard shortcut opens export dialog', async ({ page }) => {
+    await page.keyboard.press('Control+Shift+e');
+    await expect(page.locator('text=Configure your PDF export')).toBeVisible();
+  });
 });
