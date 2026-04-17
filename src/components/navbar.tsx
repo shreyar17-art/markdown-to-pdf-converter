@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import {
   FileDown,
   FileText,
@@ -35,12 +36,15 @@ interface NavbarProps {
 export function Navbar({ onExport, onTemplateSelect, onNew }: NavbarProps) {
   return (
     <nav className="h-12 border-b border-border flex items-center px-3 gap-1 bg-background/80 backdrop-blur-sm shrink-0">
-      <div className="flex items-center gap-2 mr-2">
+      <Link href="/" className="flex items-center gap-2 mr-2 cursor-pointer transition-opacity duration-200 hover:opacity-80">
         <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center">
           <FileText className="h-4 w-4 text-primary-foreground" />
         </div>
-        <span className="font-bold text-[15px] tracking-tight">Inkdown</span>
-      </div>
+        <div className="flex flex-col">
+          <span className="font-bold text-[15px] leading-none tracking-tight">Inkdown</span>
+          <span className="text-[9px] leading-none text-muted-foreground hidden sm:inline">by IntelliForge AI</span>
+        </div>
+      </Link>
 
       <div className="h-5 w-px bg-border mx-1.5" />
 

@@ -20,14 +20,16 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Inkdown — Beautiful PDFs from Markdown',
+  title: 'Inkdown — Beautiful PDFs from Markdown | IntelliForge AI',
   description:
-    'Write Markdown with live preview. Export stunning PDFs. Templates, dark mode, keyboard shortcuts. Free and open source.',
-  keywords: ['markdown', 'pdf', 'converter', 'editor', 'export', 'open source'],
+    'Write Markdown with live preview. Export stunning PDFs. Templates, dark mode, keyboard shortcuts. Built by IntelliForge AI — free and open source.',
+  keywords: ['markdown', 'pdf', 'converter', 'editor', 'export', 'open source', 'intelliforge', 'ai'],
+  authors: [{ name: 'IntelliForge AI', url: 'https://www.intelliforge.tech' }],
   openGraph: {
     title: 'Inkdown — Beautiful PDFs from Markdown',
-    description: 'Write in Markdown. Export stunning PDFs. Free, fast, and open source.',
+    description: 'Write in Markdown. Export stunning PDFs. Built by IntelliForge AI — free, fast, and open source.',
     type: 'website',
+    siteName: 'IntelliForge AI',
   },
 }
 

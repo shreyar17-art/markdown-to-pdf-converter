@@ -2,7 +2,9 @@
 
 import Link from 'next/link'
 import {
+  ArrowRight,
   Eye,
+  ExternalLink,
   FileDown,
   FileText,
   Moon,
@@ -78,7 +80,27 @@ export default function Home() {
             <FileText className="h-6 w-6 text-primary" aria-hidden />
             Inkdown
           </Link>
+          <span className="hidden text-xs text-muted-foreground sm:inline">
+            by{' '}
+            <Link
+              href="https://www.intelliforge.tech"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cursor-pointer underline decoration-muted-foreground/30 underline-offset-2 transition-colors duration-200 hover:text-foreground hover:decoration-foreground/50"
+            >
+              IntelliForge AI
+            </Link>
+          </span>
           <div className="flex-1" />
+          <Link
+            href="https://www.intelliforge.tech"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden cursor-pointer text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:inline-flex md:items-center md:gap-1"
+          >
+            IntelliForge AI
+            <ExternalLink className="h-3 w-3" />
+          </Link>
           <Link
             href="https://github.com/gengirish/inkdown"
             target="_blank"
@@ -202,12 +224,24 @@ export default function Home() {
             <p className="mt-4 text-muted-foreground">
               No sign-up required. Start writing in seconds.
             </p>
-            <Link
-              href="/editor"
-              className="mt-8 inline-flex cursor-pointer rounded-lg bg-primary px-10 py-3.5 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/30 transition-all duration-200 hover:bg-primary/90 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-safe:hover:-translate-y-0.5"
-            >
-              Open Editor
-            </Link>
+            <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+              <Link
+                href="/editor"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-primary px-10 py-3.5 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/30 transition-all duration-200 hover:bg-primary/90 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-safe:hover:-translate-y-0.5"
+              >
+                Open Editor
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="https://www.intelliforge.tech/contact"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-lg border-2 border-border px-8 py-3 text-sm font-semibold text-muted-foreground transition-all duration-200 hover:border-primary/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                Need a custom AI tool? Talk to us
+                <ExternalLink className="h-3.5 w-3.5" />
+              </Link>
+            </div>
             <p className="mt-6 text-sm text-muted-foreground">
               Free and open source — MIT License
             </p>
@@ -215,13 +249,53 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="border-t border-border py-8 text-center text-sm text-muted-foreground">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <p>
-            Built with Next.js, TypeScript, and Tailwind CSS
-          </p>
-          <p className="mt-2">
-            © {new Date().getFullYear()} Inkdown. All rights reserved.
+      <footer className="border-t border-border py-10 text-sm text-muted-foreground">
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-4 sm:flex-row sm:justify-between sm:px-6">
+          <div className="flex flex-col items-center gap-1 sm:items-start">
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4 text-primary" />
+              <span className="font-heading font-semibold text-foreground">Inkdown</span>
+            </div>
+            <p className="text-xs">
+              A product by{' '}
+              <Link
+                href="https://www.intelliforge.tech"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cursor-pointer font-medium text-foreground underline decoration-muted-foreground/30 underline-offset-2 transition-colors duration-200 hover:text-primary hover:decoration-primary/50"
+              >
+                IntelliForge AI
+              </Link>
+            </p>
+          </div>
+          <div className="flex items-center gap-6">
+            <Link
+              href="https://www.intelliforge.tech"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cursor-pointer transition-colors duration-200 hover:text-foreground"
+            >
+              Company
+            </Link>
+            <Link
+              href="https://github.com/gengirish/inkdown"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cursor-pointer transition-colors duration-200 hover:text-foreground"
+            >
+              GitHub
+            </Link>
+            <Link
+              href="https://www.intelliforge.tech/contact"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cursor-pointer transition-colors duration-200 hover:text-foreground"
+            >
+              Contact
+            </Link>
+          </div>
+          <p className="text-xs text-muted-foreground/70">
+            © {new Date().getFullYear()} IntelliForge AI. All rights reserved.
           </p>
         </div>
       </footer>
