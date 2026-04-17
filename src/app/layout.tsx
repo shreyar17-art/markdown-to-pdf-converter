@@ -1,12 +1,17 @@
 import type { Metadata } from 'next'
-import { Inter, JetBrains_Mono } from 'next/font/google'
+import { DM_Sans, JetBrains_Mono, Space_Grotesk } from 'next/font/google'
 import { ThemeProvider } from '@/providers/theme-provider'
 import { Toaster } from 'sonner'
 import './globals.css'
 
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-sans',
+})
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  variable: '--font-heading',
 })
 
 const jetbrainsMono = JetBrains_Mono({
@@ -17,7 +22,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: 'Inkdown — Beautiful PDFs from Markdown',
   description:
-    'Write in Markdown. Export stunning PDFs. Live preview, templates, dark mode. Free and open source.',
+    'Write Markdown with live preview. Export stunning PDFs. Templates, dark mode, keyboard shortcuts. Free and open source.',
   keywords: ['markdown', 'pdf', 'converter', 'editor', 'export', 'open source'],
   openGraph: {
     title: 'Inkdown — Beautiful PDFs from Markdown',
@@ -34,7 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}
+        className={`${dmSans.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           {children}

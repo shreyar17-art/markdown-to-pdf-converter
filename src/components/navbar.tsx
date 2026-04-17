@@ -46,7 +46,7 @@ export function Navbar({ onExport, onTemplateSelect, onNew }: NavbarProps) {
 
       <button
         onClick={onNew}
-        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+        className="flex items-center gap-1.5 px-2.5 h-11 min-h-[44px] rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted cursor-pointer transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         aria-label="New document"
       >
         <Plus className="h-3.5 w-3.5" />
@@ -55,7 +55,7 @@ export function Navbar({ onExport, onTemplateSelect, onNew }: NavbarProps) {
 
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
-          <button className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+          <button className="flex items-center gap-1.5 px-2.5 h-11 min-h-[44px] rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted cursor-pointer transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
             <Sparkles className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Templates</span>
             <ChevronDown className="h-3 w-3 opacity-60" />
@@ -76,7 +76,7 @@ export function Navbar({ onExport, onTemplateSelect, onNew }: NavbarProps) {
               return (
                 <DropdownMenu.Item
                   key={template.id}
-                  className="flex items-start gap-3 px-2 py-2.5 rounded-lg cursor-pointer outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                  className="flex items-start gap-3 px-2 py-2.5 min-h-[44px] rounded-lg cursor-pointer outline-none transition-colors duration-200 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   onSelect={() => onTemplateSelect(template)}
                 >
                   <Icon className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
@@ -101,7 +101,7 @@ export function Navbar({ onExport, onTemplateSelect, onNew }: NavbarProps) {
 
       <button
         onClick={onExport}
-        className="flex items-center gap-1.5 ml-1 px-3.5 py-1.5 rounded-lg text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm"
+        className="flex items-center gap-1.5 ml-1 px-3.5 h-11 min-h-[44px] rounded-lg text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer transition-all duration-200 motion-safe:hover:-translate-y-0.5 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
         <FileDown className="h-3.5 w-3.5" />
         <span className="hidden sm:inline">Export PDF</span>

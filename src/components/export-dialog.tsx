@@ -60,8 +60,12 @@ export function ExportDialog({ open, onOpenChange, markdown }: ExportDialogProps
     }
   }
 
-  const inputClass =
-    'w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2'
+  const fieldClass =
+    'w-full rounded-lg border border-input bg-background px-3 py-3 min-h-[44px] text-sm ring-offset-background transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+
+  const inputClass = fieldClass + ' cursor-text'
+
+  const selectClass = fieldClass + ' cursor-pointer'
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -101,7 +105,7 @@ export function ExportDialog({ open, onOpenChange, markdown }: ExportDialogProps
                 id="page-size"
                 value={pageSize}
                 onChange={(e) => setPageSize(e.target.value)}
-                className={inputClass + ' mt-1.5 cursor-pointer'}
+                className={selectClass + ' mt-1.5'}
               >
                 <option value="A4">A4 (210 × 297 mm)</option>
                 <option value="Letter">US Letter (8.5 × 11 in)</option>
@@ -117,7 +121,7 @@ export function ExportDialog({ open, onOpenChange, markdown }: ExportDialogProps
                 id="margin"
                 value={margin}
                 onChange={(e) => setMargin(e.target.value)}
-                className={inputClass + ' mt-1.5 cursor-pointer'}
+                className={selectClass + ' mt-1.5'}
               >
                 <option value="0.5in">Narrow (0.5 in)</option>
                 <option value="1in">Normal (1 in)</option>
@@ -128,17 +132,21 @@ export function ExportDialog({ open, onOpenChange, markdown }: ExportDialogProps
 
           <div className="flex justify-end gap-3 mt-8">
             <Dialog.Close asChild>
-              <button className="px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+              <button
+                type="button"
+                className="inline-flex items-center justify-center min-h-[44px] px-4 py-3 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted cursor-pointer transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
                 Cancel
               </button>
             </Dialog.Close>
             <button
+              type="button"
               onClick={handleExport}
               disabled={loading || !markdown.trim()}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:pointer-events-none transition-colors"
+              className="inline-flex items-center justify-center gap-2 min-h-[44px] px-4 py-3 rounded-lg text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 motion-safe:hover:-translate-y-0.5 enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               {loading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 motion-safe:animate-spin" />
               ) : (
                 <FileDown className="h-4 w-4" />
               )}
@@ -148,7 +156,8 @@ export function ExportDialog({ open, onOpenChange, markdown }: ExportDialogProps
 
           <Dialog.Close asChild>
             <button
-              className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              type="button"
+              className="absolute right-4 top-4 flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-sm opacity-70 ring-offset-background cursor-pointer transition-all duration-200 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               aria-label="Close"
             >
               <X className="h-4 w-4" />

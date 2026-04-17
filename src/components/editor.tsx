@@ -66,7 +66,7 @@ export function Editor({ markdown, onChange, onFileDrop }: EditorProps) {
       onDrop={handleDrop}
     >
       {isDragging && (
-        <div className="absolute inset-0 z-50 bg-primary/5 backdrop-blur-sm border-2 border-dashed border-primary m-2 rounded-xl flex items-center justify-center">
+        <div className="absolute inset-0 z-50 bg-primary/5 backdrop-blur-sm border-2 border-dashed border-primary m-2 rounded-xl flex items-center justify-center motion-safe:animate-in motion-safe:fade-in-0 motion-safe:duration-200 transition-opacity duration-200">
           <div className="text-center">
             <Upload className="h-10 w-10 text-primary mx-auto mb-3" />
             <p className="text-sm font-semibold text-primary">
@@ -83,7 +83,7 @@ export function Editor({ markdown, onChange, onFileDrop }: EditorProps) {
         <button
           onClick={() => setActiveTab('write')}
           className={cn(
-            'flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium transition-colors',
+            'flex-1 flex items-center justify-center gap-1.5 min-h-[44px] py-3 text-sm font-medium cursor-pointer transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
             activeTab === 'write'
               ? 'text-primary border-b-2 border-primary'
               : 'text-muted-foreground hover:text-foreground'
@@ -95,7 +95,7 @@ export function Editor({ markdown, onChange, onFileDrop }: EditorProps) {
         <button
           onClick={() => setActiveTab('preview')}
           className={cn(
-            'flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium transition-colors',
+            'flex-1 flex items-center justify-center gap-1.5 min-h-[44px] py-3 text-sm font-medium cursor-pointer transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
             activeTab === 'preview'
               ? 'text-primary border-b-2 border-primary'
               : 'text-muted-foreground hover:text-foreground'
@@ -121,7 +121,7 @@ export function Editor({ markdown, onChange, onFileDrop }: EditorProps) {
           <textarea
             value={markdown}
             onChange={(e) => onChange(e.target.value)}
-            className="flex-1 p-4 md:p-6 bg-background resize-none outline-none font-mono text-[13px] leading-relaxed placeholder:text-muted-foreground/40 scrollbar-thin"
+            className="flex-1 p-4 md:p-6 bg-background resize-none outline-none font-mono text-[13px] leading-relaxed placeholder:text-muted-foreground/40 scrollbar-thin transition-shadow duration-200 focus-visible:ring-1 focus-visible:ring-ring"
             placeholder="Start writing markdown..."
             spellCheck={false}
           />
@@ -156,7 +156,7 @@ export function Editor({ markdown, onChange, onFileDrop }: EditorProps) {
         <span>{stats.lines} lines</span>
         <div className="flex-1" />
         <span className="hidden sm:inline opacity-50">
-          Ctrl+Shift+E to export
+          ⌘⇧E / Ctrl+Shift+E to export
         </span>
       </div>
     </div>

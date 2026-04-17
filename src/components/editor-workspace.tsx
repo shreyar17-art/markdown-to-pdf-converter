@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useSyncExternalStore } from 'react'
 import { toast } from 'sonner'
 import { Navbar } from './navbar'
 import { Editor } from './editor'
@@ -10,11 +10,31 @@ import { templates, type Template } from '@/lib/templates'
 const STORAGE_KEY = 'inkdown-content'
 const DEFAULT_CONTENT = templates[0].content
 
+function subscribePrefersReducedMotion(onStoreChange: () => void) {
+  const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+  mq.addEventListener('change', onStoreChange)
+  return () => mq.removeEventListener('change', onStoreChange)
+}
+
+function getPrefersReducedMotionSnapshot() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+function getPrefersReducedMotionServerSnapshot() {
+  return false
+}
+
 export function EditorWorkspace() {
   const [markdown, setMarkdown] = useState(DEFAULT_CONTENT)
   const [exportOpen, setExportOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const previousContent = useRef('')
+
+  const prefersReducedMotion = useSyncExternalStore(
+    subscribePrefersReducedMotion,
+    getPrefersReducedMotionSnapshot,
+    getPrefersReducedMotionServerSnapshot
+  )
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY)
@@ -90,7 +110,10 @@ export function EditorWorkspace() {
   }, [markdown])
 
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div
+      className="flex flex-col h-screen bg-background"
+      data-prefers-reduced-motion={prefersReducedMotion ? 'true' : undefined}
+    >
       <Navbar
         onExport={() => setExportOpen(true)}
         onTemplateSelect={handleTemplateSelect}
