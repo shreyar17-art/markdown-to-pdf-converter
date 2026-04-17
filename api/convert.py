@@ -1,31 +1,20 @@
+from http.server import BaseHTTPRequestHandler
 import json
-import sys
-import os
-import io
 import re
-import base64
 
-try:
-    from markdown import markdown
-except ImportError:
-    print("Error: missing dependency 'markdown'. Install with 'pip install markdown'.")
-    sys.exit(1)
+from markdown import markdown
 
 def load_backend(backend_preference):
+    first_error = None
+
     if backend_preference in ("weasyprint", "auto"):
         try:
             from weasyprint import HTML
             return "weasyprint", HTML
         except (ImportError, OSError) as exc:
             if backend_preference == "weasyprint":
-                print("Error: WeasyPrint import failed. Install the Python package and required native libraries.")
-                print("Install Python deps with: pip install weasyprint")
-                print("On macOS, also install: brew install cairo pango gdk-pixbuf libffi")
-                print(f"Details: {exc}")
-                sys.exit(1)
-            fallback_error = exc
-    else:
-        fallback_error = None
+                raise RuntimeError(f"WeasyPrint import failed: {exc}") from exc
+            first_error = exc
 
     if backend_preference in ("fpdf", "auto"):
         try:
@@ -33,15 +22,10 @@ def load_backend(backend_preference):
             return "fpdf", FPDF
         except ImportError as exc:
             if backend_preference == "fpdf":
-                print("Error: missing dependency 'fpdf2'. Install with 'pip install fpdf2'.")
-                print(f"Details: {exc}")
-                sys.exit(1)
-            fallback_error = exc
+                raise RuntimeError(f"fpdf2 import failed: {exc}") from exc
+            first_error = first_error or exc
 
-    print("Error: could not load a PDF backend.")
-    if 'fallback_error' in locals():
-        print(f"First backend error: {fallback_error}")
-    sys.exit(1)
+    raise RuntimeError(f"No PDF backend available. Last error: {first_error}")
 
 DEFAULT_CSS = """
 body {
@@ -263,38 +247,50 @@ def convert_markdown_to_pdf(markdown_text, page_size='A4', margin='1in'):
     backend_name, backend_module = load_backend("auto")
     return write_pdf(markdown_text, backend_name, backend_module, page_size=page_size, margin=margin)
 
-def app(request):
-    if request['method'] != 'POST':
-        return {
-            'statusCode': 405,
-            'body': json.dumps({'error': 'Method not allowed'}),
-        }
+class handler(BaseHTTPRequestHandler):
 
-    try:
-        body = json.loads(request['body'])
+    def _send_json(self, status, data):
+        body = json.dumps(data).encode('utf-8')
+        self.send_response(status)
+        self.send_header('Content-Type', 'application/json')
+        self.send_header('Content-Length', str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def do_POST(self):
+        try:
+            content_length = int(self.headers.get('Content-Length', 0))
+            raw = self.rfile.read(content_length)
+            body = json.loads(raw)
+        except (json.JSONDecodeError, ValueError):
+            self._send_json(400, {'error': 'Invalid JSON body'})
+            return
+
         markdown_text = body.get('markdown', '')
         page_size = body.get('page_size', 'A4')
         margin = body.get('margin', '1in')
 
         if not markdown_text.strip():
-            return {
-                'statusCode': 400,
-                'body': json.dumps({'error': 'No markdown content provided'}),
-            }
+            self._send_json(400, {'error': 'No markdown content provided'})
+            return
 
-        pdf_bytes = convert_markdown_to_pdf(markdown_text, page_size=page_size, margin=margin)
+        try:
+            pdf_bytes = convert_markdown_to_pdf(markdown_text, page_size=page_size, margin=margin)
+        except Exception as e:
+            self._send_json(500, {'error': str(e)})
+            return
 
-        return {
-            'statusCode': 200,
-            'headers': {
-                'Content-Type': 'application/pdf',
-                'Content-Disposition': 'attachment; filename="converted.pdf"',
-            },
-            'body': base64.b64encode(pdf_bytes).decode('utf-8'),
-            'isBase64Encoded': True,
-        }
-    except Exception as e:
-        return {
-            'statusCode': 500,
-            'body': json.dumps({'error': str(e)}),
-        }
+        self.send_response(200)
+        self.send_header('Content-Type', 'application/pdf')
+        self.send_header('Content-Disposition', 'attachment; filename="converted.pdf"')
+        self.send_header('Content-Length', str(len(pdf_bytes)))
+        self.end_headers()
+        self.wfile.write(pdf_bytes)
+
+    def do_GET(self):
+        self._send_json(405, {'error': 'Method not allowed'})
+
+    def do_OPTIONS(self):
+        self.send_response(204)
+        self.send_header('Allow', 'POST, OPTIONS')
+        self.end_headers()
